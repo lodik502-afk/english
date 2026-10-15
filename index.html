@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#efe7d8">
+  <title>Очень важный вопрос</title>
+  <style>
+    :root {
+      --paper: #f3ecdf;
+      --paper-deep: #e9decb;
+      --ink: #1d2c35;
+      --muted: #69716e;
+      --wine: #7d3441;
+      --wine-deep: #5e2633;
+      --gold: #b7965c;
+      --green: #65776a;
+      --white: #fffaf1;
+      --shadow: 0 28px 90px rgba(39, 34, 27, .16);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100svh;
+      overflow: hidden;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(ellipse at 10% 10%, rgba(183, 150, 92, .16), transparent 30%),
+        radial-gradient(ellipse at 90% 86%, rgba(125, 52, 65, .09), transparent 31%),
+        repeating-linear-gradient(0deg, rgba(87, 70, 49, .018) 0 1px, transparent 1px 5px),
+        var(--paper);
+      display: grid;
+      place-items: center;
+      padding: 28px;
+    }
+
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      border: 1px solid rgba(125, 52, 65, .15);
+      border-radius: 50%;
+      width: 420px;
+      height: 420px;
+      z-index: 0;
+    }
+    body::before { top: -280px; right: -115px; }
+    body::after { bottom: -330px; left: -180px; width: 520px; height: 520px; }
+
+    .page {
+      width: min(100%, 1040px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 2px 18px;
+      color: var(--wine);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .topline .seal {
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 38px;
+      border: 1px solid rgba(125, 52, 65, .35);
+      border-radius: 50%;
+      font-family: Georgia, serif;
+      font-size: 15px;
+      letter-spacing: -.04em;
+      color: var(--wine);
+    }
+    .topline .rule { height: 1px; flex: 1; background: rgba(125,52,65,.22); }
+    .topline .edition { color: var(--muted); font-size: 10px; letter-spacing: .16em; }
+
+    .card {
+      position: relative;
+      min-height: 560px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.78);
+      border-radius: 7px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.82), rgba(255,250,241,.88)),
+        var(--white);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 1.03fr .97fr;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(183,150,92,.32);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .story {
+      position: relative;
+      padding: clamp(34px, 5.6vw, 72px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 3;
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 23px;
+      color: var(--wine);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 27px;
+      height: 1px;
+      background: var(--gold);
+    }
+    h1, h2, .serif {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 400;
+    }
+    h1 {
+      max-width: 600px;
+      margin: 0;
+      font-size: clamp(37px, 5.1vw, 66px);
+      line-height: 1.02;
+      letter-spacing: -.045em;
+    }
+    .subhead {
+      margin: 19px 0 0;
+      color: var(--muted);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.5;
+    }
+    .question {
+      margin-top: 26px;
+      color: var(--wine);
+      font-size: clamp(17px, 1.85vw, 20px);
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .actions {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-height: 61px;
+      margin-top: 27px;
+    }
+    button {
+      min-height: 49px;
+      border: 0;
+      border-radius: 3px;
+      padding: 0 24px;
+      font: 700 14px/1 Arial, Helvetica, sans-serif;
+      letter-spacing: .02em;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+      touch-action: manipulation;
+    }
+    .yes {
+      color: var(--white);
+      background: var(--wine);
+      box-shadow: 0 7px 18px rgba(94,38,51,.17);
+    }
+    .yes:hover { background: var(--wine-deep); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(94,38,51,.25); }
+    .yes:focus-visible, .no:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+    .no {
+      position: relative;
+      color: var(--ink);
+      background: #e7dfd2;
+      border: 1px solid #d4c9b8;
+      box-shadow: 0 4px 10px rgba(39,34,27,.06);
+      z-index: 8;
+      white-space: nowrap;
+    }
+    .no.is-running {
+      position: fixed;
+      left: 0;
+      top: 0;
+      transition: left .16s ease-out, top .16s ease-out, transform .18s ease;
+    }
+    .no.is-running:hover { transform: rotate(-3deg) scale(1.04); }
+    .micro {
+      min-height: 20px;
+      margin: 8px 0 0;
+      color: #81837c;
+      font-size: 12px;
+    }
+    .signature {
+      margin-top: 37px;
+      color: #8a8377;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 14px;
+      font-style: italic;
+    }
+    .signature span { color: var(--wine); }
+
+    .art {
+      position: relative;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 52% 42%, rgba(222,185,122,.25), transparent 34%),
+        linear-gradient(155deg, #273a3b, #172830 58%, #402b32);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+    .art::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .32;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 74px, rgba(237,226,203,.13) 75px 77px),
+        linear-gradient(0deg, rgba(8,17,21,.82), transparent 55%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 100%);
+    }
+    .window {
+      position: absolute;
+      top: 9%;
+      left: 22%;
+      width: 58%;
+      height: 56%;
+      border: 7px solid rgba(232,219,190,.58);
+      box-shadow: inset 0 0 0 2px rgba(15,28,31,.4), 0 0 48px rgba(220,167,91,.18);
+      opacity: .67;
+    }
+    .window::before, .window::after {
+      content: "";
+      position: absolute;
+      background: rgba(232,219,190,.48);
+    }
+    .window::before { width: 5px; top: 0; bottom: 0; left: calc(50% - 2px); }
+    .window::after { height: 5px; left: 0; right: 0; top: 51%; }
+    .glow {
+      position: absolute;
+      left: 12%;
+      right: 10%;
+      bottom: 13%;
+      height: 33%;
+      background: radial-gradient(ellipse, rgba(189,116,64,.38), rgba(123,59,48,.1) 43%, transparent 72%);
+      filter: blur(8px);
+    }
+    .quote {
+      position: relative;
+      z-index: 1;
+      width: min(82%, 350px);
+      margin-top: 9%;
+      color: rgba(255,249,238,.92);
+      text-align: center;
+      font: italic clamp(26px, 3vw, 38px)/1.2 Georgia, "Times New Roman", serif;
+      letter-spacing: -.03em;
+      text-shadow: 0 3px 22px rgba(0,0,0,.52);
+    }
+    .quote small {
+      display: block;
+      margin-top: 18px;
+      color: rgba(232,219,190,.72);
+      font: 700 10px/1.4 Arial, sans-serif;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+
+    .success {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      padding: clamp(36px, 6vw, 74px);
+      align-items: center;
+      background:
+        radial-gradient(ellipse at 50% 27%, rgba(255,244,219,.94), rgba(255,250,241,.96) 63%),
+        var(--white);
+      text-align: center;
+    }
+    .success.show { display: flex; flex-direction: column; justify-content: center; animation: reveal .55s both; }
+    .heart {
+      color: var(--wine);
+      font-size: 54px;
+      line-height: 1;
+      text-shadow: 0 8px 25px rgba(125,52,65,.2);
+      animation: heartbeat 1.4s ease-in-out infinite;
+    }
+    .success h2 {
+      max-width: 690px;
+      margin: 19px 0 0;
+      color: var(--ink);
+      font-size: clamp(38px, 5.2vw, 62px);
+      line-height: 1.03;
+      letter-spacing: -.045em;
+    }
+    .success p {
+      max-width: 500px;
+      margin: 17px 0 0;
+      color: var(--muted);
+      font: 19px/1.55 Georgia, "Times New Roman", serif;
+    }
+    .success .thank-you {
+      margin-top: 26px;
+      color: var(--wine);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    .success .bottom-heart { margin-top: 22px; color: var(--gold); font-size: 18px; letter-spacing: .35em; }
+
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 20;
+    }
+    .burst { position: absolute; width: 1px; height: 1px; }
+    .spark {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: var(--size, 7px);
+      height: var(--size, 7px);
+      border-radius: 50%;
+      background: var(--color, var(--gold));
+      opacity: 0;
+      animation: burst 1.45s cubic-bezier(.13,.74,.31,1) forwards;
+      box-shadow: 0 0 10px currentColor;
+    }
+    .burst-heart {
+      position: absolute;
+      color: var(--wine);
+      font-size: 17px;
+      opacity: 0;
+      animation: float-heart 2.6s ease-out forwards;
+    }
+
+    @keyframes burst {
+      0% { transform: translate(0,0) scale(.25); opacity: 0; }
+      12% { opacity: 1; }
+      70% { opacity: 1; }
+      100% { transform: translate(var(--dx),var(--dy)) scale(.9); opacity: 0; }
+    }
+    @keyframes float-heart {
+      0% { transform: translateY(14px) scale(.6) rotate(-10deg); opacity: 0; }
+      20% { opacity: .9; }
+      100% { transform: translateY(-115px) scale(1.2) rotate(12deg); opacity: 0; }
+    }
+    @keyframes heartbeat { 0%,100% { transform: scale(1); } 50% { transform: scale(1.11); } }
+    @keyframes reveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 760px) {
+      body { overflow: auto; padding: 18px 14px; }
+      .page { width: min(100%, 560px); margin: auto; }
+      .topline .edition { display: none; }
+      .card { grid-template-columns: 1fr; min-height: 0; }
+      .story { min-height: 440px; padding: 48px 34px 35px; }
+      .art { min-height: 220px; }
+      .window { top: 5%; height: 72%; }
+      .quote { margin: 0; font-size: 27px; }
+      .success { position: fixed; }
+      .signature { margin-top: 23px; }
+      .no.is-running { position: fixed; }
+    }
+    @media (max-width: 420px) {
+      .topline { font-size: 9px; letter-spacing: .13em; }
+      .story { padding: 43px 26px 28px; }
+      h1 { font-size: 39px; }
+      .actions { gap: 8px; }
+      button { padding: 0 15px; font-size: 13px; }
+      .micro { font-size: 11px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topline">
+      <span class="seal" aria-hidden="true">A+</span>
+      <span>A very important question</span>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="edition">A little note · 2026</span>
+    </div>
+
+    <section class="card" aria-labelledby="main-title">
+      <div class="story" id="ask">
+        <div class="eyebrow">Dear Anna Vladimirovna</div>
+        <h1 id="main-title">Можно один<br>маленький<br>вопрос?</h1>
+        <p class="subhead">Я очень старался. Правда.</p>
+        <p class="question">Анна Владимировна, вы хотите поставить мне пятёрку?</p>
+        <div class="actions" id="actions">
+          <button class="yes" id="yes" type="button">Да, конечно!</button>
+          <button class="no" id="no" type="button" aria-label="Нет — кнопка всё время убегает">Нет</button>
+        </div>
+        <p class="micro" id="hint" aria-live="polite">Подсказка: у кнопки «Нет» сегодня очень быстрые ножки.</p>
+        <p class="signature">With hope and gratitude, <span>your student</span></p>
+      </div>
+
+      <aside class="art" aria-hidden="true">
+        <div class="window"></div>
+        <div class="glow"></div>
+        <div class="quote">“A little kindness<br>goes a long way.”<small>with appreciation</small></div>
+      </aside>
+
+      <div class="success" id="success" aria-live="polite" aria-hidden="true">
+        <div class="heart" aria-hidden="true">♥</div>
+        <div class="eyebrow">The best teacher award</div>
+        <h2>Спасибо большое<br>за внимание!</h2>
+        <p>Вы только что сделали чей-то день чуточку прекраснее.</p>
+        <div class="thank-you">You are simply the best</div>
+        <div class="bottom-heart" aria-hidden="true">✦ &nbsp; ♥ &nbsp; ✦</div>
+      </div>
+    </section>
+  </main>
+  <div class="sparkles" id="sparkles" aria-hidden="true"></div>
+  <script>
+    const noButton = document.getElementById("no");
+    const yesButton = document.getElementById("yes");
+    const hint = document.getElementById("hint");
+    const success = document.getElementById("success");
+    const sparkles = document.getElementById("sparkles");
+    let escapes = 0;
+
+    const hints = [
+      "Ой! Кажется, кнопка передумала стоять на месте.",
+      "Нет? А кнопка уже где-то в другом месте.",
+      "У этой кнопки сегодня очень быстрые ножки.",
+      "Почти! Хотя нет, она снова убежала.",
+      "Кажется, ответ «да» ей нравится больше."
+    ];
+
+    function moveNo(pointerEvent) {
+      escapes += 1;
+      const w = noButton.offsetWidth || 82;
+      const h = noButton.offsetHeight || 49;
+      const margin = 18;
+      const maxX = Math.max(margin, window.innerWidth - w - margin);
+      const maxY = Math.max(margin, window.innerHeight - h - margin);
+      const px = pointerEvent && Number.isFinite(pointerEvent.clientX) ? pointerEvent.clientX : -500;
+      const py = pointerEvent && Number.isFinite(pointerEvent.clientY) ? pointerEvent.clientY : -500;
+      let x = margin, y = margin;
+
+      for (let i = 0; i < 30; i += 1) {
+        const nextX = margin + Math.random() * (maxX - margin);
+        const nextY = margin + Math.random() * (maxY - margin);
+        if (Math.hypot(nextX - px, nextY - py) > 190) {
+          x = nextX;
+          y = nextY;
+          break;
+        }
+        x = nextX;
+        y = nextY;
+      }
+
+      noButton.classList.add("is-running");
+      noButton.style.left = x + "px";
+      noButton.style.top = y + "px";
+      hint.textContent = hints[(escapes - 1) % hints.length];
+    }
+
+    noButton.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      moveNo(event);
+    });
+    noButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      moveNo(event);
+    });
+
+    function makeBurst(x, y, count = 24) {
+      const burst = document.createElement("span");
+      burst.className = "burst";
+      burst.style.left = x + "px";
+      burst.style.top = y + "px";
+      const colors = ["#b7965c", "#7d3441", "#65776a", "#e3ba78", "#fffaf1"];
+      for (let i = 0; i < count; i += 1) {
+        const particle = document.createElement("i");
+        particle.className = "spark";
+        const angle = (Math.PI * 2 * i) / count + Math.random() * .12;
+        const distance = 52 + Math.random() * 96;
+        particle.style.setProperty("--dx", Math.cos(angle) * distance + "px");
+        particle.style.setProperty("--dy", Math.sin(angle) * distance + "px");
+        particle.style.setProperty("--color", colors[i % colors.length]);
+        particle.style.setProperty("--size", (4 + Math.random() * 5) + "px");
+        burst.appendChild(particle);
+      }
+      sparkles.appendChild(burst);
+      window.setTimeout(() => burst.remove(), 1700);
+    }
+
+    function makeHeart(x, y) {
+      const heart = document.createElement("span");
+      heart.className = "burst-heart";
+      heart.textContent = "♥";
+      heart.style.left = x + "px";
+      heart.style.top = y + "px";
+      sparkles.appendChild(heart);
+      window.setTimeout(() => heart.remove(), 2800);
+    }
+
+    yesButton.addEventListener("click", () => {
+      noButton.remove();
+      document.getElementById("ask").setAttribute("aria-hidden", "true");
+      success.classList.add("show");
+      success.setAttribute("aria-hidden", "false");
+      const points = [
+        [window.innerWidth * .18, window.innerHeight * .24],
+        [window.innerWidth * .77, window.innerHeight * .2],
+        [window.innerWidth * .5, window.innerHeight * .12],
+        [window.innerWidth * .83, window.innerHeight * .68],
+        [window.innerWidth * .25, window.innerHeight * .73]
+      ];
+      points.forEach(([x, y], index) => {
+        window.setTimeout(() => makeBurst(x, y, 28), index * 180);
+        window.setTimeout(() => makeHeart(x + 10, y + 24), index * 170 + 80);
+      });
+    });
+  </script>
+</body>
+</html>
